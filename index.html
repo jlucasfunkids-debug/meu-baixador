@@ -3,21 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download de Vídeos</title>
+    <title>Baixador de Vídeos Grátis</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f4f4f9; }
-        input { padding: 10px; width: 300px; margin-right: 10px; border: 1px solid #ccc; }
-        button { padding: 10px 20px; background: #ff0000; color: white; border: none; cursor: pointer; }
-        #resultado { margin-top: 20px; }
-        a { display: inline-block; margin-top: 10px; padding: 10px; background: green; color: white; text-decoration: none; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; text-align: center; padding: 40px 20px; background: #0f172a; color: #f8fafc; }
+        .container { max-width: 500px; margin: 0 auto; background: #1e293b; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5); }
+        h1 { margin-bottom: 20px; font-size: 24px; color: #38bdf8; }
+        input { padding: 12px; width: 100%; box-sizing: border-box; margin-bottom: 15px; border: 2px solid #334155; border-radius: 6px; background: #0f172a; color: white; font-size: 16px; }
+        input:focus { border-color: #38bdf8; outline: none; }
+        .btn-group { display: flex; gap: 10px; }
+        button { flex: 1; padding: 12px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; transition: 0.2s; }
+        .btn-mp4 { background: #0284c7; color: white; }
+        .btn-mp4:hover { background: #0369a1; }
+        .btn-mp3 { background: #22c55e; color: white; }
+        .btn-mp3:hover { background: #16a34a; }
+        .alerta { margin-top: 15px; font-size: 13px; color: #94a3b8; }
     </style>
 </head>
 <body>
-    <h1>Baixar Vídeo do YouTube</h1>
-    <input type="text" id="urlVideo" placeholder="Cole o link do YouTube aqui">
-    <button onclick="buscarDownload()">Gerar Link</button>
-    <div id="resultado"></div>
 
-    <script src="script.js"></script>
+<div class="container">
+    <h1>Baixar Vídeo do YouTube</h1>
+    <input type="text" id="urlVideo" placeholder="Cole o link do YouTube aqui...">
+    
+    <div class="btn-group">
+        <button class="btn-mp4" onclick="baixar('mp4')">Baixar MP4 (Vídeo)</button>
+        <button class="btn-mp3" onclick="baixar('mp3')">Baixar MP3 (Áudio)</button>
+    </div>
+
+    <p class="alerta">* Você será redirecionado para o servidor de download seguro externo.</p>
+</div>
+
+<script>
+function baixar(formato) {
+    const url = document.getElementById('urlVideo').value;
+    if (!url) {
+        alert('Por favor, insira um link do YouTube válido!');
+        return;
+    }
+    
+    // Serviço externo atualizado e resiliente a bloqueios
+    const gatewayUrl = `https://9xbuddy.com{encodeURIComponent(url)}`;
+    
+    // Abre a página de processamento direto da mídia em uma nova aba segura
+    window.open(gatewayUrl, '_blank');
+}
+</script>
+
 </body>
 </html>
