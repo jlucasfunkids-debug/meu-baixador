@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download de Vídeos</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f4f4f9; }
+        input { padding: 10px; width: 300px; margin-right: 10px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; background: #ff0000; color: white; border: none; cursor: pointer; }
+        #resultado { margin-top: 20px; }
+        a { display: inline-block; margin-top: 10px; padding: 10px; background: green; color: white; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <h1>Baixar Vídeo do YouTube</h1>
+    <input type="text" id="urlVideo" placeholder="Cole o link do YouTube aqui">
+    <button onclick="buscarDownload()">Gerar Link</button>
+    <div id="resultado"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
