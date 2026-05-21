@@ -30,7 +30,7 @@
         <button class="btn-mp3" onclick="processar('mp3')">Baixar MP3 (Áudio)</button>
     </div>
 
-    <p class="alerta">* O download será processado automaticamente na próxima página.</p>
+    <p class="alerta">* O download será processado na página oficial externa.</p>
 </div>
 
 <script>
@@ -41,30 +41,33 @@ function processar(formato) {
         return;
     }
     
-    // Extrator simples de ID do YouTube para compatibilidade
     let videoId = "";
-    if (urlInput.includes("youtu.be/")) {
-        videoId = urlInput.split("youtu.be/")[1].split(/[?#]/)[0];
-    } else if (urlInput.includes("watch?v=")) {
-        videoId = urlInput.split("watch?v=")[1].split(/[&#]/)[0];
-    } else if (urlInput.includes("shorts/")) {
-        videoId = urlInput.split("shorts/")[1].split(/[?#]/)[0];
-    } else {
-        videoId = urlInput; // Fallback caso coloquem só o ID
-    }
-
-    if (!videoId || videoId.length < 5) {
-        alert('Não encontramos um ID de vídeo válido nesta URL. Copie o link novamente.');
+    
+    try {
+        if (urlInput.includes("://youtube.com")) {
+            const urlObj = new URL(urlInput);
+            videoId = urlObj.searchParams.get("v");
+        } else if (urlInput.includes("youtu.be/")) {
+            const partes = urlInput.split("youtu.be/");
+            videoId = partes[1].split(/[?#]/)[0];
+        } else if (urlInput.includes("://youtube.com")) {
+            const partes = urlInput.split("shorts/");
+            videoId = partes[1].split(/[?#]/)[0];
+        } else {
+            videoId = urlInput;
+        }
+    } catch (e) {
+        alert('Erro ao processar o formato do link. Certifique-se de copiar a URL inteira.');
         return;
     }
 
-    // Usando o gateway do y2mate/y2api que processa o ID do vídeo de forma mais direta
-    let redirecionamentoUrl = "";
-    if (formato === 'mp3') {
-        redirecionamentoUrl = `https://y2mate.com{videoId}`;
-    } else {
-        redirecionamentoUrl = `https://y2mate.com{videoId}`;
+    if (!videoId) {
+        alert('Não encontramos um ID de vídeo válido. Tente copiar o link novamente.');
+        return;
     }
+
+    // Encaminha para o SaveFrom usando a sintaxe exata do ID do vídeo
+    const redirecionamentoUrl = `https://pt.savefrom.net/#url=https://://youtube.com?v=${videoId}`;
     
     window.open(redirecionamentoUrl, '_blank');
 }
