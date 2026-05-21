@@ -7,47 +7,31 @@ async function buscarDownload() {
         return;
     }
 
-    resultadoDiv.innerHTML = "Processando... por favor, aguarde.";
+    resultadoDiv.innerHTML = "Buscando streams de mídia... aguarde.";
 
-    // API estável de terceiros (cobalt.tools pública ou similar estruturada via proxy)
-    // Usando uma rota pública alternativa direta para facilitar o download sem servidor próprio
-    const apiUrl = `https://wuk.sh`;
-
+    // Nova URL utilizando um serviço de conversão estático público via iframe/link dinâmico
     try {
-        const resposta = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                url: urlInput,
-                vQuality: '720', // Qualidade padrão do vídeo
-                isAudioOnly: false
-            })
-        });
+        // Formata a URL padrão para extrair o ID do vídeo do YouTube
+        let videoId = "";
+        if (urlInput.includes("youtu.be/")) {
+            videoId = urlInput.split("youtu.be/")[1].split("?")[0];
+        } else if (urlInput.includes("watch?v=")) {
+            videoId = urlInput.split("watch?v=")[1].split("&")[0];
+        } else if (urlInput.includes("shorts/")) {
+            videoId = urlInput.split("shorts/")[1].split("?")[0];
+        }
 
-        const dados = await resposta.json();
-
-        if (dados.url) {
-            resultadoDiv.innerHTML = `<a href="${dados.url}" target="_blank" rel="noopener noreferrer">Clique aqui para baixar o vídeo</a>`;
-        } else if (dados.text) {
-            resultadoDiv.innerHTML = `Erro do servidor: ${dados.text}`;
+        if (videoId) {
+            // Em vez de um fetch direto que dá erro de conexão, geramos um widget de download direto integrado
+            resultadoDiv.innerHTML = `
+                <p>Vídeo encontrado! Use o botão oficial abaixo para processar:</p>
+                <iframe src="https://tw0save.com{videoId}" 
+                        width="100%" height="150px" style="border:none; border-radius:8px; background:#fff;">
+                </iframe>`;
         } else {
-            resultadoDiv.innerHTML = "Não foi possível gerar o link. Tente outro vídeo ou shorts.";
+            resultadoDiv.innerHTML = "Não foi possível identificar o ID do vídeo. Verifique se o link está correto.";
         }
     } catch (erro) {
-        // Se a API principal falhar, usamos uma segunda opção (Fallback) para garantir
-        const fallbackUrl = `https://allorigins.win{encodeURIComponent('https://vercel.app' + urlInput)}`;
-        try {
-            const respFallback = await fetch(fallbackUrl);
-            const dadosFallback = await respFallback.json();
-            if(dadosFallback.url) {
-                resultadoDiv.innerHTML = `<a href="${dadosFallback.url}" target="_blank">Clique aqui para baixar</a>`;
-                return;
-            }
-        } catch(e) {}
-        
-        resultadoDiv.innerHTML = "Erro ao conectar com o servidor. Tente novamente em instantes.";
+        resultadoDiv.innerHTML = "Erro ao processar o link do YouTube. Tente novamente.";
     }
 }
